@@ -31,20 +31,54 @@ These skills represent the primary pipeline for generating designs and syncing t
 ##### code-to-design
 Converts existing frontend code (React, Vue, etc.) to a Stitch Design by chaining static HTML extraction, design system extraction, and file upload.
 
+* **Prompt Example:**
+  > *"Upload the frontend code at `/path/to/dashboard` into a Stitch project name 'Dashboard-Migration-2026'."*
+
+* **Prompt Example:**
+  > *"Sync the app at `/path/to/dashboard` to Stitch."*
+
 ##### generate-design
 Unified entry point for generating new screens from text or images, editing existing screens, and generating design variants using Stitch MCP.
+
+* **Prompt Example (Text-to-Design):**
+  > *"Make a browse tab for a mobile app for romance and date night ideas."*
+
+* **Prompt Example (Edit-Design):**
+  > *"Edit the login screen in Stitch project `projects/987654321` to add a 'Remember Me' checkbox and a 'Forgot Password' link, and change the primary button color to blue."*
+
+* **Prompt Example (Image-to-Design):**
+  > *"Generate a new home screen in Stitch using the dashboard mockup found at `/path/to/mockup.png` as a visual reference, and adapt it to match our active design system theme."*
+
+* **Prompt Example (Generate-Variants):**
+  > *"Generate 3 distinct design variants of our existing home screen (ID `projects/123/screens/456`) in Stitch, experimenting with dark mode styles, high visual density layouts, and playful illustration components."*
 
 ##### manage-design-system
 Manages design systems in the Stitch platform using MCP tools, including uploading `DESIGN.md` and applying themes to screens.
 
+* **Prompt Example:**
+  > *"Upload our local design system config from `.stitch/DESIGN.md` into project `projects/123456789`, and globally apply these updated theme tokens across all active screens in the project."*
+
 ##### extract-design-md
 Extracts a comprehensive design system (`DESIGN.md`) directly from frontend source code files without needing to build or render the application.
+
+* **Prompt Example:**
+  > *"Scan the frontend source code in our `/src` folder and extract its design system. Compile a comprehensive, editorially rich `DESIGN.md` inside the `.stitch` directory detailing the core colors, Lexend typography hierarchy, and glassmorphism styles."*
 
 ##### extract-static-html
 Extracts self-contained static HTML from a running local web application or React components, inlining CSS and images.
 
+* **Prompt Example:**
+  > *"Extract a high-fidelity static HTML snapshot of our local dev page running on `http://localhost:3000/profile`. Inline all CSS and assets, and save it to `.stitch/profile.html`."*
+
 ##### upload-to-stitch
 Uploads local assets (images, mockups, HTML files) to a Stitch project using a Python script to bypass token limits.
+
+* **Prompt Example (HTML):**
+  > *"Upload `.stitch/landing_page.html` to Stitch project `projects/987654321`."*
+
+* **Prompt Example (Image):**
+  > *"Generate a new home screen in Stitch using the dashboard mockup found at `/path/to/mockup.png` as a visual reference."*
+
 
 **Install all Core Design Workflows at once:**
 ```bash
