@@ -446,7 +446,13 @@ function main(): void {
     );
 
     if (!opts.dryRun) {
-      fs.writeFileSync(file, processed, 'utf-8');
+      // Use fd-based write to eliminate TOCTOU race with the earlier read
+      const wfd = fs.openSync(file, 'w');
+      try {
+        fs.writeFileSync(wfd, processed, 'utf-8');
+      } finally {
+        fs.closeSync(wfd);
+      }
     }
 
     const totalInlined = stats.srcInlined + stats.urlInlined;

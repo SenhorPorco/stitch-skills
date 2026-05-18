@@ -240,13 +240,7 @@ function isImageUrl(url: string): boolean {
   return !skip.some((s) => url.includes(s));
 }
 
-/**
- * Sanitize a string for safe inclusion in log output.
- * Strips newlines, carriage returns, and control characters to prevent log injection.
- */
-function sanitizeForLog(str: string): string {
-  return str.replace(/[\x00-\x1F\x7F]/g, '');
-}
+
 
 /**
  * Validate that a URL is safe for outbound requests (SSRF protection).
@@ -301,7 +295,7 @@ function fetchAndEncode(url: string, timeout: number, redirectCount = 0): Promis
   if (redirectCount >= MAX_REDIRECTS) {
     const fallback =
       'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-    console.warn(`  WARN: Too many redirects (${MAX_REDIRECTS}) <- ${sanitizeForLog(url.slice(0, 70))}...`);
+    console.warn(`  WARN: Too many redirects (${MAX_REDIRECTS}) <- ${url.slice(0, 70).replace(/\n|\r/g, '')}...`);
     imgCache.set(url, fallback);
     return Promise.resolve(fallback);
   }
@@ -313,7 +307,7 @@ function fetchAndEncode(url: string, timeout: number, redirectCount = 0): Promis
     } catch {
       const fallback =
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-      console.warn(`  WARN: Invalid URL: ${sanitizeForLog(url.slice(0, 70))}...`);
+      console.warn(`  WARN: Invalid URL: ${url.slice(0, 70).replace(/\n|\r/g, '')}...`);
       imgCache.set(url, fallback);
       resolve(fallback);
       return;
@@ -323,7 +317,7 @@ function fetchAndEncode(url: string, timeout: number, redirectCount = 0): Promis
     if (!isSafeUrl(parsedUrl)) {
       const fallback =
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-      console.warn(`  WARN: Blocked request to non-public URL: ${sanitizeForLog(url.slice(0, 70))}...`);
+      console.warn(`  WARN: Blocked request to non-public URL: ${url.slice(0, 70).replace(/\n|\r/g, '')}...`);
       imgCache.set(url, fallback);
       resolve(fallback);
       return;
@@ -359,7 +353,7 @@ function fetchAndEncode(url: string, timeout: number, redirectCount = 0): Promis
           const fallback =
             'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
           console.warn(
-            `  WARN: HTTP ${resp.statusCode} <- ${sanitizeForLog(url.slice(0, 70))}...`,
+            `  WARN: HTTP ${resp.statusCode} <- ${url.slice(0, 70).replace(/\n|\r/g, '')}...`,
           );
           resp.resume();
           imgCache.set(url, fallback);
@@ -375,14 +369,14 @@ function fetchAndEncode(url: string, timeout: number, redirectCount = 0): Promis
           const result = `data:${ct};base64,${buf.toString('base64')}`;
           imgCache.set(url, result);
           console.log(
-            `  Embedded ${buf.length.toLocaleString()} bytes <- ${sanitizeForLog(url.slice(0, 70))}...`,
+            `  Embedded ${buf.length.toLocaleString()} bytes <- ${url.slice(0, 70).replace(/\n|\r/g, '')}...`,
           );
           resolve(result);
         });
         resp.on('error', (e: Error) => {
           const fallback =
             'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-          console.warn(`  WARN: Stream error: ${sanitizeForLog(e.message)} <- ${sanitizeForLog(url.slice(0, 70))}...`);
+          console.warn(`  WARN: Stream error: ${e.message.replace(/\n|\r/g, '')} <- ${url.slice(0, 70).replace(/\n|\r/g, '')}...`);
           imgCache.set(url, fallback);
           resolve(fallback);
         });
@@ -392,7 +386,7 @@ function fetchAndEncode(url: string, timeout: number, redirectCount = 0): Promis
     req.on('error', (e: Error) => {
       const fallback =
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-      console.warn(`  WARN: ${sanitizeForLog(e.message)} <- ${sanitizeForLog(url.slice(0, 70))}...`);
+      console.warn(`  WARN: ${e.message.replace(/\n|\r/g, '')} <- ${url.slice(0, 70).replace(/\n|\r/g, '')}...`);
       imgCache.set(url, fallback);
       resolve(fallback);
     });
@@ -401,7 +395,7 @@ function fetchAndEncode(url: string, timeout: number, redirectCount = 0): Promis
       req.destroy();
       const fallback =
         'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-      console.warn(`  WARN: Timeout after ${timeout}ms <- ${sanitizeForLog(url.slice(0, 70))}...`);
+      console.warn(`  WARN: Timeout after ${timeout}ms <- ${url.slice(0, 70).replace(/\n|\r/g, '')}...`);
       imgCache.set(url, fallback);
       resolve(fallback);
     });
