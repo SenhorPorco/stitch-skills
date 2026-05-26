@@ -65,6 +65,13 @@ Expert guidance for integrating and building applications with shadcn/ui compone
 npx skills add google-labs-code/stitch-skills --skill shadcn-ui --global
 ```
 
+### firecrawl
+Firecrawl gives AI agents and apps fast, reliable web context with strong search, scraping, and interaction tools. One install command sets up three skill segments: live CLI tools, app-integration build skills, and outcome-focused workflow skills.
+
+```bash
+npx skills add google-labs-code/stitch-skills --skill firecrawl --global
+```
+
 ## Repository Structure
 
 Every directory within `skills/` or at the root level follows a standardized structure to ensure the AI agent has everything it needs to perform "few-shot" learning and automated quality checks.
